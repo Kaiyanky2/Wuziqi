@@ -7,7 +7,9 @@
     android:background="@drawable/bg"
     tools:context="com.wangkaiyan.app.wuziqi.MainActivity">
 
+    <!--如果view需要存储与恢复,由activity自动进行调用,这个view应该有一个id-->
     <com.wangkaiyan.app.wuziqi.WuziqiPanel
+        android:id="@+id/id_wuziqi"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

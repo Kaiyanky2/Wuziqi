@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,8 +38,8 @@ public class WuziqiPanel extends View {
     /**
      * 存储棋子坐标的集合
      */
-    private List<Point> mWhiteArray = new ArrayList<>();
-    private List<Point> mBlackArray = new ArrayList<>();
+    private ArrayList<Point> mWhiteArray = new ArrayList<>();
+    private ArrayList<Point> mBlackArray = new ArrayList<>();
 
     /**
      * 白棋先下或者轮到白棋
@@ -403,5 +405,39 @@ public class WuziqiPanel extends View {
 
     private Point getValidPoint(int x, int y) {
         return new Point((int) (x / mLineHeight), (int)(y / mLineHeight));
+    }
+
+
+    /**
+     * View的存储与恢复
+     */
+    private static final String INSTANCE = "instance";
+    private static final String INSTANCE_GAME_OVER = "instance_game_over";
+    private static final String INSTANCE_WHITE_ARRAY = "instance_white_array";
+    private static final String INSTANCE_BLACK_ARRAY = "instance_black_array";
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(INSTANCE, super.onSaveInstanceState());
+        bundle.putBoolean(INSTANCE_GAME_OVER, mIsGameOver);
+        bundle.putParcelableArrayList(INSTANCE_WHITE_ARRAY, mWhiteArray);
+        bundle.putParcelableArrayList(INSTANCE_BLACK_ARRAY, mBlackArray);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        //state是否是bundle类型的,也就是说是否是我们自己设置的
+        if (state instanceof Bundle){
+            Bundle bundle = (Bundle) state;
+            mIsGameOver = bundle.getBoolean(INSTANCE_GAME_OVER, mIsGameOver);
+            mWhiteArray = bundle.getParcelableArrayList(INSTANCE_WHITE_ARRAY);
+            mBlackArray = bundle.getParcelableArrayList(INSTANCE_BLACK_ARRAY);
+            super.onRestoreInstanceState(bundle.getParcelable(INSTANCE));
+
+            return;
+        }
+        super.onRestoreInstanceState(state);
     }
 }
