@@ -1,6 +1,8 @@
 package com.wangkaiyan.app.wuziqi;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,7 +13,6 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,8 +181,31 @@ public class WuziqiPanel extends View {
             mIsGameOver = true;
             mWhiteIsWinner = whiteWin;
 
-            String text = mWhiteIsWinner? "白棋赢!": "黑棋赢";
-            Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+            String text = mWhiteIsWinner? "白棋赢!": "黑棋赢!";
+//            Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+            dialog.setTitle(text);
+            dialog.setMessage("再来一局?");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //清空数据
+                    mWhiteArray.clear();
+                    mBlackArray.clear();
+                    mIsGameOver = false;
+                    mWhiteIsWinner = false;
+
+                    invalidate();
+                }
+            });
+            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialog.show();
         }
     }
 
